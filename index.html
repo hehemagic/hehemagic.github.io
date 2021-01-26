@@ -164,6 +164,97 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/01/26/day3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Kaixuan Wang">
+      <meta itemprop="description" content="只争朝夕">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Magic">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/01/26/day3/" class="post-title-link" itemprop="url">Java基础（2）</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-01-26 19:32:02 / 修改时间：20:52:57" itemprop="dateCreated datePublished" datetime="2021-01-26T19:32:02+08:00">2021-01-26</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="流程控制"><a href="#流程控制" class="headerlink" title="流程控制"></a>流程控制</h1><h2 id="Scanner对象"><a href="#Scanner对象" class="headerlink" title="Scanner对象"></a>Scanner对象</h2><p>通过Scanner类来获取用户的输入，该类在java.util.Scanner中</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">#导入包</span><br><span class="line"><span class="keyword">import</span> java.util.Scanner</span><br><span class="line"></span><br><span class="line">#新建对象</span><br><span class="line">Scanner s = <span class="keyword">new</span> Scanner()</span><br><span class="line"> </span><br><span class="line">#判断是否有输入数据</span><br><span class="line"><span class="keyword">if</span> (s.hasNext())&#123;</span><br><span class="line">    String str = s.next();</span><br><span class="line">    System.out.println(<span class="string">&quot;输入的数据:&quot;</span>+str);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#io流对象用完之后一定要关闭，节约资源</span><br><span class="line">s.close();</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p><strong>Scanner.next()</strong>: 无法得到有空格的输入字符串</p>
+</li>
+<li><p><strong>Scanner.nextLine()</strong>: 回车之前的字符串都可以获得</p>
+</li>
+<li><p><strong>Scanner还可以获取输入数据类型（int,float…..）</strong>：每个数据类型都有hasNext，和nextLine方法</p>
+</li>
+</ul>
+<h2 id="If结构"><a href="#If结构" class="headerlink" title="If结构"></a>If结构</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(布尔表达式)&#123;</span><br><span class="line">    <span class="comment">//布尔值为真，执行</span></span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="comment">//布尔值为假执行</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>多选择结构可以使用多个elseif</li>
+</ul>
+<h2 id="Switch结构"><a href="#Switch结构" class="headerlink" title="Switch结构"></a>Switch结构</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">switch</span>(expression)&#123;</span><br><span class="line">    <span class="keyword">case</span> value1:</span><br><span class="line">        <span class="comment">//语句</span></span><br><span class="line">        <span class="keyword">break</span>;<span class="comment">//可选</span></span><br><span class="line">    <span class="keyword">case</span> value2:</span><br><span class="line">        <span class="comment">//</span></span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">default</span>: <span class="comment">//可选</span></span><br><span class="line">        <span class="comment">//语句</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>expression可以为字符串</li>
+<li>break语句可选，如果不写的话，满足某个value后，后面的语句都会执行</li>
+<li>default里面的语句为不满足列出的情况，会默认执行的语句</li>
+</ul>
+<h2 id="while循环"><a href="#while循环" class="headerlink" title="while循环"></a>while循环</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span>(布尔表达式)&#123;</span><br><span class="line">    <span class="comment">//表达式为真执行</span></span><br><span class="line">    <span class="comment">//循环内容</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="do-while循环"><a href="#do-while循环" class="headerlink" title="do while循环"></a>do while循环</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">do</span>&#123;</span><br><span class="line">    <span class="comment">//代码语句</span></span><br><span class="line">&#125;<span class="keyword">while</span>(布尔表达式)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>代码语句至少会执行一次</li>
+</ul>
+<h2 id="for-循环"><a href="#for-循环" class="headerlink" title="for 循环"></a>for 循环</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (初始化；布尔表达式; 更新)&#123;</span><br><span class="line">    <span class="comment">//布尔表达式为真</span></span><br><span class="line">    <span class="comment">//代码语句</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>for 循环的执行次数是指定的</li>
+<li>for( ; ; )为死循环</li>
+</ul>
+<h2 id="增强for循环"><a href="#增强for循环" class="headerlink" title="增强for循环"></a>增强for循环</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(声明语句：表达式)&#123;</span><br><span class="line">    <span class="comment">//代码语句</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/01/22/day2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -610,7 +701,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-count">5</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -657,7 +748,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共951字</span>
+  <span class="post-count">博客全站共1.3k字</span>
 </div>
 
 
