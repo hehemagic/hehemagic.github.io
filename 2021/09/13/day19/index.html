@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/study-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/study-16x16.png">
+  <link rel="mask-icon" href="/images/study.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="计算机发展简史电子管计算机 第二次世界大战是电子管计算机产生的催化剂，英国为了解密德国的密文 第一台电子管计算机：埃尼阿克（ENIAC） 集成度低，空间占用大；功耗高，运算慢；操作复杂  晶体管计算机 贝尔实验室发明了晶体管 第一台晶体管计算机：TX-0。 性能最高：PDP-1，配有显示器 集成度较高，空间占用小；功耗较低，运行速度快；操作相对简单，交互更加方便  集成电路计算机 德州仪器工程师发">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计算机组成原理">
+<meta property="og:url" content="http://example.com/2021/09/13/day19/index.html">
+<meta property="og:site_name" content="Magic">
+<meta property="og:description" content="计算机发展简史电子管计算机 第二次世界大战是电子管计算机产生的催化剂，英国为了解密德国的密文 第一台电子管计算机：埃尼阿克（ENIAC） 集成度低，空间占用大；功耗高，运算慢；操作复杂  晶体管计算机 贝尔实验室发明了晶体管 第一台晶体管计算机：TX-0。 性能最高：PDP-1，配有显示器 集成度较高，空间占用小；功耗较低，运行速度快；操作相对简单，交互更加方便  集成电路计算机 德州仪器工程师发">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2021/09/13/day19/day19_1.png">
+<meta property="og:image" content="http://example.com/2021/09/13/day19/day19_2.png">
+<meta property="og:image" content="http://example.com/2021/09/13/day19/day19_3.png">
+<meta property="og:image" content="http://example.com/2021/09/13/day19/day19_4.png">
+<meta property="og:image" content="http://example.com/2021/09/13/day19/day19_5.png">
+<meta property="og:image" content="http://example.com/2021/09/13/day19/day19_6.png">
+<meta property="og:image" content="http://example.com/2021/09/13/day19/day19_7.png">
+<meta property="og:image" content="http://example.com/2021/09/13/day19/day19_8.png">
+<meta property="og:image" content="http://example.com/2021/09/13/day19/day19_9.png">
+<meta property="og:image" content="http://example.com/2021/09/13/day19/day19_10.png">
+<meta property="og:image" content="http://example.com/2021/09/13/day19/day19_11.png">
+<meta property="og:image" content="http://example.com/2021/09/13/day19/day19_12.png">
+<meta property="article:published_time" content="2021-09-13T04:47:46.401Z">
+<meta property="article:modified_time" content="2021-07-11T12:23:39.877Z">
+<meta property="article:author" content="Kaixuan Wang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2021/09/13/day19/day19_1.png">
+
+<link rel="canonical" href="http://example.com/2021/09/13/day19/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>计算机组成原理 | Magic</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Magic</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/09/13/day19/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Kaixuan Wang">
+      <meta itemprop="description" content="只争朝夕">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Magic">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          计算机组成原理
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-09-13 12:47:46" itemprop="dateCreated datePublished" datetime="2021-09-13T12:47:46+08:00">2021-09-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-07-11 20:23:39" itemprop="dateModified" datetime="2021-07-11T20:23:39+08:00">2021-07-11</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="计算机发展简史"><a href="#计算机发展简史" class="headerlink" title="计算机发展简史"></a>计算机发展简史</h1><h2 id="电子管计算机"><a href="#电子管计算机" class="headerlink" title="电子管计算机"></a>电子管计算机</h2><ul>
+<li>第二次世界大战是电子管计算机产生的催化剂，英国为了解密德国的密文</li>
+<li>第一台电子管计算机：埃尼阿克（ENIAC）</li>
+<li>集成度低，空间占用大；功耗高，运算慢；操作复杂</li>
+</ul>
+<h2 id="晶体管计算机"><a href="#晶体管计算机" class="headerlink" title="晶体管计算机"></a>晶体管计算机</h2><ul>
+<li>贝尔实验室发明了晶体管</li>
+<li>第一台晶体管计算机：TX-0。</li>
+<li>性能最高：PDP-1，配有显示器</li>
+<li>集成度较高，空间占用小；功耗较低，运行速度快；操作相对简单，交互更加方便</li>
+</ul>
+<h2 id="集成电路计算机"><a href="#集成电路计算机" class="headerlink" title="集成电路计算机"></a>集成电路计算机</h2><ul>
+<li>德州仪器工程师发明了集成电路（IC）</li>
+<li>计算机更小，功耗更低，计算速度更快</li>
+<li>操作系统的雏形：IBM推出的System/360</li>
+</ul>
+<h2 id="超大规模集成电路计算机"><a href="#超大规模集成电路计算机" class="headerlink" title="超大规模集成电路计算机"></a>超大规模集成电路计算机</h2><ul>
+<li>一个芯片上集成上百万晶体管</li>
+<li>速度更快，体积更小，价格更低，用途更加丰富（文本处理，游戏等）</li>
+</ul>
+<h2 id="未来的计算机"><a href="#未来的计算机" class="headerlink" title="未来的计算机"></a>未来的计算机</h2><ul>
+<li>生物计算机：和人体进行结合，可以自动修复，不受信号干扰</li>
+<li>量子计算机：遵循量子力学的物理计算机</li>
+</ul>
+<h1 id="计算机的体系与结构"><a href="#计算机的体系与结构" class="headerlink" title="计算机的体系与结构"></a>计算机的体系与结构</h1><h2 id="冯诺依曼体系"><a href="#冯诺依曼体系" class="headerlink" title="冯诺依曼体系"></a>冯诺依曼体系</h2><ul>
+<li><p>将程序指令和数据一起存储的计算机设计概念结构</p>
+</li>
+<li><p>为了改变早期计算机只能完成固定任务的缺点，冯诺依曼提出存储程序指令，设计通用电路的概念</p>
+</li>
+<li><p>组成：</p>
+<ul>
+<li>必须有一个储存器</li>
+<li>必须有一个控制器</li>
+<li>必须有一个运算器</li>
+<li>必须有一个输入设备</li>
+<li>必须有一个输出设备</li>
+</ul>
+</li>
+<li><p>现代计算机都是冯诺依曼机</p>
+</li>
+</ul>
+<p><img src="/2021/09/13/day19/day19_1.png" alt="冯诺依曼机"></p>
+<ul>
+<li>冯诺依曼瓶颈：cpu的速度与存储器速度不匹配，cpu太快，经常空转</li>
+</ul>
+<blockquote>
+<p>改进，解决瓶颈</p>
+</blockquote>
+<p><img src="/2021/09/13/day19/day19_2.png" alt="现代计算机"></p>
+<ul>
+<li>存储器：围绕cpu的高速设备（cpu寄存器，内存）。以存储器为核心</li>
+</ul>
+<h1 id="计算机的层次与编程语言"><a href="#计算机的层次与编程语言" class="headerlink" title="计算机的层次与编程语言"></a>计算机的层次与编程语言</h1><h2 id="程序翻译与程序解释"><a href="#程序翻译与程序解释" class="headerlink" title="程序翻译与程序解释"></a>程序翻译与程序解释</h2><ul>
+<li>程序翻译：高级语言经过编译器生成计算机实际执行的底层语言（C ——&gt;汇编）。C/C++</li>
+<li>程序解释：每一句高级语言都会转换成一句或多句底层语言，由解释器完成。Python/PHP/JavaScript</li>
+</ul>
+<blockquote>
+<p>程序翻译和程序解释的区别：</p>
+<ol>
+<li>计算机执行的都是底层语言程序</li>
+<li>程序翻译会生成新的底层语言程序。程序解释不会生成底层语言程序，而是将高级语言作为输入，直接转换成底层语言交给计算机执行</li>
+<li>程序解释过程由底层语言编写的解释器去解释高级语言程序</li>
+</ol>
+</blockquote>
+<h2 id="计算机的层次"><a href="#计算机的层次" class="headerlink" title="计算机的层次"></a>计算机的层次</h2><p><img src="/2021/09/13/day19/day19_3.png" alt="计算机层次"></p>
+<ul>
+<li>硬件逻辑层：逻辑电路组成</li>
+<li> 微程序机器层：编程语言是微指令集，微指令组成的微程序可以直接交给硬件执行</li>
+<li>传统机器层：编程语言是CPU指令集（机器指令），和硬件直接相关。不同架构的CPU使用不同的指令集</li>
+</ul>
+<blockquote>
+<p>微指令 &lt; 微程序 = 机器指令</p>
+<ul>
+<li>一条机器指令对应一个微程序</li>
+<li>一个微程序对应一组微指令</li>
+</ul>
+</blockquote>
+<ul>
+<li>操作系统层：<ul>
+<li>向上给用户提供简易的操作界面</li>
+<li>向下对接指令系统，管理硬件资源</li>
+<li>软件和硬件之间的适配层</li>
+</ul>
+</li>
+<li>汇编语言层：汇编语言可以翻译成可直接执行的机器语言，完成任务的工具是汇编器。</li>
+<li>高级语言层：Java,C等</li>
+<li>应用层：word\excel\ppt</li>
+</ul>
+<h1 id="计算机的总线"><a href="#计算机的总线" class="headerlink" title="计算机的总线"></a>计算机的总线</h1><ul>
+<li>总线：解决不同设置之间的通信，</li>
+<li>总线的分类：<ul>
+<li>片内总线：芯片内部的总线。连接寄存器与寄存器，寄存器与控制器、运算器。高集成度芯片内部的信息传输线</li>
+<li>系统总线：连接CPU和外围设备的信息传输线。<ul>
+<li>数据总线：双向传输各个部位数据信息，数据总线的位数一般与CPU位数相同</li>
+<li>地址总线：指定源数据或目的数据在内存中的地址；地址总线的位数与存储单元相关</li>
+<li>控制总线：发出各种控制信号的传输线；从一个组件发送到另一个组件；可以监视不同组件之间的状态（就绪、未就绪）</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="总线的仲裁"><a href="#总线的仲裁" class="headerlink" title="总线的仲裁"></a>总线的仲裁</h2><ul>
+<li>解决总线使用权的冲突问题</li>
+</ul>
+<blockquote>
+<p>链式查询：按顺序给权限</p>
+</blockquote>
+<p><img src="/2021/09/13/day19/day19_4.png" alt="链式查询"></p>
+<ul>
+<li>电路复杂度低，仲裁规则简单；但优先级低的设备难以获得权限；对电路故障敏感</li>
+</ul>
+<blockquote>
+<p>计时器定时查询：对设备编号，使用计数器计数，计数器与设备编号一致，该设备获得权限</p>
+</blockquote>
+<p><img src="/2021/09/13/day19/day19_5.png" alt="定时器"></p>
+<blockquote>
+<p>独立仲裁:仲裁器和每个设备都相连，设备可单独发出请求，收到多个请求时，仲裁其会按照优先级分配使用权</p>
+</blockquote>
+<ul>
+<li>响应速度快，优先顺序可以变化；但是连线多，总线控制较为复杂</li>
+</ul>
+<h1 id="计算机输入输出设备"><a href="#计算机输入输出设备" class="headerlink" title="计算机输入输出设备"></a>计算机输入输出设备</h1><ul>
+<li>输入设备：字符输入设备和图像输入设备<ul>
+<li>字符输入设备：键盘</li>
+<li>图像输入设备：鼠标、数位板（绘图）、扫描仪（图形转化为数字）</li>
+<li>图像输出设备：显示器、打印机、投影仪</li>
+</ul>
+</li>
+</ul>
+<h2 id="输入输出接口的通用设计"><a href="#输入输出接口的通用设计" class="headerlink" title="输入输出接口的通用设计"></a>输入输出接口的通用设计</h2><ul>
+<li>数据线：I/O设备与主机进行数据交换的传输线</li>
+<li>状态线：IO设备状态向主机报告的信号线，查询设备是否就绪，是否被占用</li>
+<li>命令线：CPU向IO设备发送命令</li>
+<li>设备选择线：主机选择与IO设备进行操作的信号线，多个IO设备</li>
+</ul>
+<h2 id="CPU与IO设备通信方法"><a href="#CPU与IO设备通信方法" class="headerlink" title="CPU与IO设备通信方法"></a>CPU与IO设备通信方法</h2><ul>
+<li>CPU与IO速度不一致</li>
+</ul>
+<h3 id="程序中断"><a href="#程序中断" class="headerlink" title="程序中断"></a>程序中断</h3><ul>
+<li>外围IO设备就绪，向CPU发出中断信号，CPU响应中断信号去处理相应事件</li>
+</ul>
+<p><img src="/2021/09/13/day19/day19_6.png" alt="程序中断"></p>
+<ul>
+<li>提供低速设备通知CPU的一种异步方法；CPU可以在高速运转的同时兼顾低速设备的响应</li>
+</ul>
+<h2 id="DMA（直接存储器访问）"><a href="#DMA（直接存储器访问）" class="headerlink" title="DMA（直接存储器访问）"></a>DMA（直接存储器访问）</h2><ul>
+<li>DMA直接连接主存与IO设备</li>
+<li>不需要CPU参与</li>
+</ul>
+<p><img src="/2021/09/13/day19/day19_7.png" alt="DMA"></p>
+<h1 id="计算机存储器概览"><a href="#计算机存储器概览" class="headerlink" title="计算机存储器概览"></a>计算机存储器概览</h1><h2 id="存储器分类"><a href="#存储器分类" class="headerlink" title="存储器分类"></a>存储器分类</h2><ul>
+<li>存储的介质分类：半导体储存器、磁存储器</li>
+<li>存取方式：随机存储器（RAM）、串行存储器、只读存储器（ROM）</li>
+</ul>
+<h2 id="存储器层次结构"><a href="#存储器层次结构" class="headerlink" title="存储器层次结构"></a>存储器层次结构</h2><ul>
+<li>缓存：速度快，价格高</li>
+<li>主存：速度中，价格中</li>
+<li>辅存：速度慢，价格低</li>
+</ul>
+<p><img src="/2021/09/13/day19/day19_8.png" alt="层次结构"></p>
+<ul>
+<li>在CPU和主存之间加一个速度很快的cache，解决主存速度不足的问题。<ul>
+<li>局部性原理：CPU访问存储器时，无论是存取指令还是存取数据，所访问的存储单元趋于一个较小的连续区域中</li>
+</ul>
+</li>
+<li>主存之外增加辅助存储器，为了解决主存容量不足的问题</li>
+</ul>
+<h2 id="主存和辅存"><a href="#主存和辅存" class="headerlink" title="主存和辅存"></a>主存和辅存</h2><h3 id="主存（内存）"><a href="#主存（内存）" class="headerlink" title="主存（内存）"></a>主存（内存）</h3><ul>
+<li>RAM。RAM通过电容存储数据，必须隔一段时间刷新一次，因此断电后主存会丢失</li>
+</ul>
+<p><img src="/2021/09/13/day19/day19_9.png" alt="主存"></p>
+<ul>
+<li>32位系统，最大内存为4GB，因为地址总线位数限制。64位系统的内存比较大</li>
+</ul>
+<h3 id="辅存（磁盘）"><a href="#辅存（磁盘）" class="headerlink" title="辅存（磁盘）"></a>辅存（磁盘）</h3><ul>
+<li>表面是可磁化的硬磁特性材料</li>
+<li>移动磁头径向运动读取磁道信息</li>
+</ul>
+<blockquote>
+<p>先来先服务算法：按照顺序访问进行访问</p>
+<p>最短寻道时间优先：与磁头当前位置有关，优先访问与磁头位置最近的请求</p>
+<p>扫描算法（电梯算法）：每次只往一个方向移动，到达一个方向需要服务的尽头才会转变方向</p>
+<p>循环扫描算法：每次只往一个方向运动，不会转变方向，类似循环链表。</p>
+</blockquote>
+<h2 id="高速缓存"><a href="#高速缓存" class="headerlink" title="高速缓存"></a>高速缓存</h2><h3 id="工作原理"><a href="#工作原理" class="headerlink" title="工作原理"></a>工作原理</h3><ul>
+<li>字：存放在一个存储单元中的二进制代码组合，可以表示一个数据、一个指令、一个字符串等，是最小的存储单位</li>
+<li>字块：存放在连续的存储单元中被看作是一个单元的一组字</li>
+</ul>
+<p><img src="/2021/09/13/day19/day19_10.png" alt="字和字块"></p>
+<ul>
+<li><p>字的地址包含两部分：前m位指定字所在的字块，后b位指定字在字块中的地址</p>
+</li>
+<li><p>缓存中的数据是主存中一部分数据的复制</p>
+</li>
+</ul>
+<blockquote>
+<p>工作情况：</p>
+<ol>
+<li>CPU需要的数据在缓存中：直接使用</li>
+<li>CPU需要的数据不在缓存中：需要从主存中拿</li>
+</ol>
+</blockquote>
+<h3 id="替换策略"><a href="#替换策略" class="headerlink" title="替换策略"></a>替换策略</h3><ul>
+<li>从主存中载入数据时，需要进行替换，提高效率</li>
+</ul>
+<blockquote>
+<p>随机算法：随机选取缓存中的一个字块进行替换</p>
+<p>FIFO算法：把高速缓存看作队列，会替换队列头的字块</p>
+<p>LFU算法（最不经常使用算法）：优先淘汰最不常用字块，因此需要额外空间记录每个字块的访问次数</p>
+<p>LRU算法（最近最少使用算法）：优先淘汰一段时间没有使用的字块。一般使用双向链表实现。把当前访问节点置于链表头部，链表尾即为最不常使用字块</p>
+</blockquote>
+<h1 id="计算机的指令系统"><a href="#计算机的指令系统" class="headerlink" title="计算机的指令系统"></a>计算机的指令系统</h1><h2 id="机器指令的形式"><a href="#机器指令的形式" class="headerlink" title="机器指令的形式"></a>机器指令的形式</h2><ul>
+<li>组成：操作码+地址码</li>
+<li>操作码：指明指令所要完成的操作；操作码的位数反映了机器的操作种类</li>
+<li>地址码：给出操作数或操作数地址；分为三地址码、二地址码、一地址码指令<ul>
+<li>三地址指令：操作码+地址1+地址2+地址3。（地址1）操作（地址2） ——&gt;（地址3）</li>
+<li>二地址指令：操作码+地址1+地址2。（地址1）操作（地址2）——&gt;（地址1或地址2）</li>
+<li>一地址指令：操作码+地址1。（地址1）操作——&gt;（地址1）；（地址1）操作（ACC）——&gt;（地址1）</li>
+<li>无地址指令：一般为返回指令、停止指令等</li>
+</ul>
+</li>
+</ul>
+<h2 id="机器指令的操作类型"><a href="#机器指令的操作类型" class="headerlink" title="机器指令的操作类型"></a>机器指令的操作类型</h2><ul>
+<li>数据传输：<ul>
+<li>寄存器之间、寄存器与存储单元之间、存储单元之间传输</li>
+<li>数据读写、交换地址数据、清零置一等操作</li>
+</ul>
+</li>
+<li>算数逻辑操作：<ul>
+<li>加减乘除</li>
+<li>与或非</li>
+</ul>
+</li>
+<li>移位操作：<ul>
+<li>左移、右移</li>
+</ul>
+</li>
+<li>控制指令：<ul>
+<li>等待、停机、空操作、中断等</li>
+</ul>
+</li>
+</ul>
+<h2 id="机器指令的寻址方式"><a href="#机器指令的寻址方式" class="headerlink" title="机器指令的寻址方式"></a>机器指令的寻址方式</h2><ul>
+<li>指令寻址：<ul>
+<li>顺序寻址</li>
+<li>跳跃寻址</li>
+</ul>
+</li>
+<li>数据寻址：<ul>
+<li>立即寻址：指令直接获得操作数</li>
+<li>直接寻址：直接给出操作数在主存中的位置</li>
+<li>间接寻址：指令地址码给出的是操作数地址的地址，需要访问一次或多次主存</li>
+</ul>
+</li>
+</ul>
+<h1 id="计算机的控制器"><a href="#计算机的控制器" class="headerlink" title="计算机的控制器"></a>计算机的控制器</h1><ul>
+<li>协调和控制计算机运行</li>
+</ul>
+<p><img src="/2021/09/13/day19/day19_11.png" alt="控制器内容"></p>
+<h2 id="程序计数器"><a href="#程序计数器" class="headerlink" title="程序计数器"></a>程序计数器</h2><ul>
+<li>存储下一条指令地址</li>
+</ul>
+<h2 id="时序发生器"><a href="#时序发生器" class="headerlink" title="时序发生器"></a>时序发生器</h2><ul>
+<li>电气工程领域，发送时序脉冲</li>
+<li>CPU依据不同的时序脉冲有节奏的进行工作</li>
+</ul>
+<h2 id="指令译码器"><a href="#指令译码器" class="headerlink" title="指令译码器"></a>指令译码器</h2><ul>
+<li>将计算机指令翻译成相应的数据，控制传输指令和相关数据</li>
+</ul>
+<h2 id="指令寄存器"><a href="#指令寄存器" class="headerlink" title="指令寄存器"></a>指令寄存器</h2><ul>
+<li>从主存或高速缓存读取计算机指令，存储计算机指令</li>
+</ul>
+<h2 id="主存地址寄存器"><a href="#主存地址寄存器" class="headerlink" title="主存地址寄存器"></a>主存地址寄存器</h2><ul>
+<li>保存CPU正要访问的内存单元地址</li>
+</ul>
+<h2 id="主存数据寄存器"><a href="#主存数据寄存器" class="headerlink" title="主存数据寄存器"></a>主存数据寄存器</h2><ul>
+<li>保存当前CPU正要读或写的主存数据</li>
+</ul>
+<h2 id="通用寄存器"><a href="#通用寄存器" class="headerlink" title="通用寄存器"></a>通用寄存器</h2><ul>
+<li>暂时存放或传送数据或指令</li>
+<li>保存ALU的运算中间结果</li>
+</ul>
+<h1 id="计算机的运算器"><a href="#计算机的运算器" class="headerlink" title="计算机的运算器"></a>计算机的运算器</h1><ul>
+<li>数据运算加工</li>
+</ul>
+<p><img src="/2021/09/13/day19/day19_12.png" alt="运算器结构"></p>
+<h2 id="数据缓冲器"><a href="#数据缓冲器" class="headerlink" title="数据缓冲器"></a>数据缓冲器</h2><ul>
+<li>输入缓冲：暂时存放外设送来的数据</li>
+<li>输出缓冲：暂时存放送往外设的数据</li>
+</ul>
+<h2 id="ALU"><a href="#ALU" class="headerlink" title="ALU"></a>ALU</h2><ul>
+<li>完成常见的运算</li>
+</ul>
+<h2 id="状态字寄存器"><a href="#状态字寄存器" class="headerlink" title="状态字寄存器"></a>状态字寄存器</h2><ul>
+<li>存放运算状态（进位、溢出、条件码等）</li>
+<li>存放运算控制信息</li>
+</ul>
+<h1 id="计算机指令的执行过程"><a href="#计算机指令的执行过程" class="headerlink" title="计算机指令的执行过程"></a>计算机指令的执行过程</h1><h2 id="指令执行过程"><a href="#指令执行过程" class="headerlink" title="指令执行过程"></a>指令执行过程</h2><ol>
+<li>取指令：从缓存取指令，送到指令寄存器</li>
+<li>分析指令：指令译码器译码、发出控制信号、程序计数器+1</li>
+<li>执行指令：装载数据到寄存器、ALU处理数据、记录运算状态、送出运算结果</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/09/13/day18/" rel="prev" title="JVM">
+      <i class="fa fa-chevron-left"></i> JVM
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/09/13/day20/" rel="next" title="操作系统">
+      操作系统 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%8F%91%E5%B1%95%E7%AE%80%E5%8F%B2"><span class="nav-number">1.</span> <span class="nav-text">计算机发展简史</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%B5%E5%AD%90%E7%AE%A1%E8%AE%A1%E7%AE%97%E6%9C%BA"><span class="nav-number">1.1.</span> <span class="nav-text">电子管计算机</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%99%B6%E4%BD%93%E7%AE%A1%E8%AE%A1%E7%AE%97%E6%9C%BA"><span class="nav-number">1.2.</span> <span class="nav-text">晶体管计算机</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9B%86%E6%88%90%E7%94%B5%E8%B7%AF%E8%AE%A1%E7%AE%97%E6%9C%BA"><span class="nav-number">1.3.</span> <span class="nav-text">集成电路计算机</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B6%85%E5%A4%A7%E8%A7%84%E6%A8%A1%E9%9B%86%E6%88%90%E7%94%B5%E8%B7%AF%E8%AE%A1%E7%AE%97%E6%9C%BA"><span class="nav-number">1.4.</span> <span class="nav-text">超大规模集成电路计算机</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%AA%E6%9D%A5%E7%9A%84%E8%AE%A1%E7%AE%97%E6%9C%BA"><span class="nav-number">1.5.</span> <span class="nav-text">未来的计算机</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%9A%84%E4%BD%93%E7%B3%BB%E4%B8%8E%E7%BB%93%E6%9E%84"><span class="nav-number">2.</span> <span class="nav-text">计算机的体系与结构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%AF%E8%AF%BA%E4%BE%9D%E6%9B%BC%E4%BD%93%E7%B3%BB"><span class="nav-number">2.1.</span> <span class="nav-text">冯诺依曼体系</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%9A%84%E5%B1%82%E6%AC%A1%E4%B8%8E%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80"><span class="nav-number">3.</span> <span class="nav-text">计算机的层次与编程语言</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A8%8B%E5%BA%8F%E7%BF%BB%E8%AF%91%E4%B8%8E%E7%A8%8B%E5%BA%8F%E8%A7%A3%E9%87%8A"><span class="nav-number">3.1.</span> <span class="nav-text">程序翻译与程序解释</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%9A%84%E5%B1%82%E6%AC%A1"><span class="nav-number">3.2.</span> <span class="nav-text">计算机的层次</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%9A%84%E6%80%BB%E7%BA%BF"><span class="nav-number">4.</span> <span class="nav-text">计算机的总线</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BA%BF%E7%9A%84%E4%BB%B2%E8%A3%81"><span class="nav-number">4.1.</span> <span class="nav-text">总线的仲裁</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E8%AE%BE%E5%A4%87"><span class="nav-number">5.</span> <span class="nav-text">计算机输入输出设备</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E6%8E%A5%E5%8F%A3%E7%9A%84%E9%80%9A%E7%94%A8%E8%AE%BE%E8%AE%A1"><span class="nav-number">5.1.</span> <span class="nav-text">输入输出接口的通用设计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CPU%E4%B8%8EIO%E8%AE%BE%E5%A4%87%E9%80%9A%E4%BF%A1%E6%96%B9%E6%B3%95"><span class="nav-number">5.2.</span> <span class="nav-text">CPU与IO设备通信方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A8%8B%E5%BA%8F%E4%B8%AD%E6%96%AD"><span class="nav-number">5.2.1.</span> <span class="nav-text">程序中断</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DMA%EF%BC%88%E7%9B%B4%E6%8E%A5%E5%AD%98%E5%82%A8%E5%99%A8%E8%AE%BF%E9%97%AE%EF%BC%89"><span class="nav-number">5.3.</span> <span class="nav-text">DMA（直接存储器访问）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%AD%98%E5%82%A8%E5%99%A8%E6%A6%82%E8%A7%88"><span class="nav-number">6.</span> <span class="nav-text">计算机存储器概览</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%98%E5%82%A8%E5%99%A8%E5%88%86%E7%B1%BB"><span class="nav-number">6.1.</span> <span class="nav-text">存储器分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%98%E5%82%A8%E5%99%A8%E5%B1%82%E6%AC%A1%E7%BB%93%E6%9E%84"><span class="nav-number">6.2.</span> <span class="nav-text">存储器层次结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BB%E5%AD%98%E5%92%8C%E8%BE%85%E5%AD%98"><span class="nav-number">6.3.</span> <span class="nav-text">主存和辅存</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E5%AD%98%EF%BC%88%E5%86%85%E5%AD%98%EF%BC%89"><span class="nav-number">6.3.1.</span> <span class="nav-text">主存（内存）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BE%85%E5%AD%98%EF%BC%88%E7%A3%81%E7%9B%98%EF%BC%89"><span class="nav-number">6.3.2.</span> <span class="nav-text">辅存（磁盘）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%AB%98%E9%80%9F%E7%BC%93%E5%AD%98"><span class="nav-number">6.4.</span> <span class="nav-text">高速缓存</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-number">6.4.1.</span> <span class="nav-text">工作原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9B%BF%E6%8D%A2%E7%AD%96%E7%95%A5"><span class="nav-number">6.4.2.</span> <span class="nav-text">替换策略</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%9A%84%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F"><span class="nav-number">7.</span> <span class="nav-text">计算机的指令系统</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%BA%E5%99%A8%E6%8C%87%E4%BB%A4%E7%9A%84%E5%BD%A2%E5%BC%8F"><span class="nav-number">7.1.</span> <span class="nav-text">机器指令的形式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%BA%E5%99%A8%E6%8C%87%E4%BB%A4%E7%9A%84%E6%93%8D%E4%BD%9C%E7%B1%BB%E5%9E%8B"><span class="nav-number">7.2.</span> <span class="nav-text">机器指令的操作类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%BA%E5%99%A8%E6%8C%87%E4%BB%A4%E7%9A%84%E5%AF%BB%E5%9D%80%E6%96%B9%E5%BC%8F"><span class="nav-number">7.3.</span> <span class="nav-text">机器指令的寻址方式</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%9A%84%E6%8E%A7%E5%88%B6%E5%99%A8"><span class="nav-number">8.</span> <span class="nav-text">计算机的控制器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%99%A8"><span class="nav-number">8.1.</span> <span class="nav-text">程序计数器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%B6%E5%BA%8F%E5%8F%91%E7%94%9F%E5%99%A8"><span class="nav-number">8.2.</span> <span class="nav-text">时序发生器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8C%87%E4%BB%A4%E8%AF%91%E7%A0%81%E5%99%A8"><span class="nav-number">8.3.</span> <span class="nav-text">指令译码器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8C%87%E4%BB%A4%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-number">8.4.</span> <span class="nav-text">指令寄存器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BB%E5%AD%98%E5%9C%B0%E5%9D%80%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-number">8.5.</span> <span class="nav-text">主存地址寄存器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BB%E5%AD%98%E6%95%B0%E6%8D%AE%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-number">8.6.</span> <span class="nav-text">主存数据寄存器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%9A%E7%94%A8%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-number">8.7.</span> <span class="nav-text">通用寄存器</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%9A%84%E8%BF%90%E7%AE%97%E5%99%A8"><span class="nav-number">9.</span> <span class="nav-text">计算机的运算器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%BC%93%E5%86%B2%E5%99%A8"><span class="nav-number">9.1.</span> <span class="nav-text">数据缓冲器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ALU"><span class="nav-number">9.2.</span> <span class="nav-text">ALU</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8A%B6%E6%80%81%E5%AD%97%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-number">9.3.</span> <span class="nav-text">状态字寄存器</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%8C%87%E4%BB%A4%E7%9A%84%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B"><span class="nav-number">10.</span> <span class="nav-text">计算机指令的执行过程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8C%87%E4%BB%A4%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B"><span class="nav-number">10.1.</span> <span class="nav-text">指令执行过程</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Kaixuan Wang"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Kaixuan Wang</p>
+  <div class="site-description" itemprop="description">只争朝夕</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kaixuan Wang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

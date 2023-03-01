@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/study-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/study-16x16.png">
+  <link rel="mask-icon" href="/images/study.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="String​    字符串String内部是通过一个char[]数组表示的，java中“…”代表字符串，’.’代表字符char。  java字符串不可变，因为其内部字段为private final char[]以及没有任何修改char[]的方法实现的 修改字符串时，并不是修改了原来的字符串，而是在常量池中新创建了一个字符串 只有创建常量池中不存在的字符串才会创建新的字符串 使用new 创建Str">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java常用类">
+<meta property="og:url" content="http://example.com/2021/09/13/day10/index.html">
+<meta property="og:site_name" content="Magic">
+<meta property="og:description" content="String​    字符串String内部是通过一个char[]数组表示的，java中“…”代表字符串，’.’代表字符char。  java字符串不可变，因为其内部字段为private final char[]以及没有任何修改char[]的方法实现的 修改字符串时，并不是修改了原来的字符串，而是在常量池中新创建了一个字符串 只有创建常量池中不存在的字符串才会创建新的字符串 使用new 创建Str">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-09-13T04:47:46.391Z">
+<meta property="article:modified_time" content="2021-06-02T08:48:49.042Z">
+<meta property="article:author" content="Kaixuan Wang">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2021/09/13/day10/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>java常用类 | Magic</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Magic</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/09/13/day10/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Kaixuan Wang">
+      <meta itemprop="description" content="只争朝夕">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Magic">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          java常用类
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-09-13 12:47:46" itemprop="dateCreated datePublished" datetime="2021-09-13T12:47:46+08:00">2021-09-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-06-02 16:48:49" itemprop="dateModified" datetime="2021-06-02T16:48:49+08:00">2021-06-02</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="String"><a href="#String" class="headerlink" title="String"></a>String</h1><p>​    字符串String内部是通过一个char[]数组表示的，java中“…”代表字符串，’.’代表字符char。</p>
+<ul>
+<li>java字符串不可变，因为其内部字段为private final char[]以及没有任何修改char[]的方法实现的<ul>
+<li>修改字符串时，并不是修改了原来的字符串，而是在常量池中新创建了一个字符串</li>
+<li>只有创建常量池中不存在的字符串才会创建新的字符串</li>
+<li>使用new 创建String对象时，会同时在堆和常量池中都创建对象，栈中的引用指向堆中的对象</li>
+</ul>
+</li>
+<li>比较String是否相同时要使用equals()方法而不能使用==</li>
+<li>java编译器在初期会将所有的字符串放进常量池，相同的字符串合并成一个对象</li>
+</ul>
+<h2 id="String-方法"><a href="#String-方法" class="headerlink" title="String 方法"></a>String 方法</h2><ol>
+<li><p>**equalsIgnoreCase()**：比较两个字符串，忽略大小写</p>
+</li>
+<li><p><strong>contains(Char Sequence)</strong>:判断字符串是否包含指定字符串</p>
+</li>
+<li><p>**indexof()，lastIndexOf()**：获得指定子串的索引</p>
+</li>
+<li><p>**startsWith()，endsWith()**：判断字符串是否以指定子串开头，结尾</p>
+</li>
+<li><p>**subString()**：获得指定索引的子串</p>
+</li>
+<li><p>**trim()**：去除字符串首尾空白字符（空格，\t，\r，\n），返回新的字符串</p>
+</li>
+<li><p>**strip()**：去除字符串首尾空白字符，中文的空格也会被移除</p>
+</li>
+<li><p>**isEmpty()**：判断字符串是否为空</p>
+</li>
+<li><p>**isBlank()**：判断字符串是否为空白字符串</p>
+</li>
+<li><p>**replace()**：替换字符串中的字符</p>
+</li>
+<li><p>**replaceAll()**：通过正则表达式替换所有符合规则的子串</p>
+</li>
+<li><p>**split()**：分割字符串，传入正则表达式</p>
+</li>
+<li><p>**join()**：使用指定字符串连接字符串数组</p>
+</li>
+<li><p><strong>format()静态方法，formatted()方法</strong>：格式化字符串，传入其他参数替换占位符，生成新的字符串</p>
+<ul>
+<li>%s：显示字符串</li>
+<li>%d：显示整数</li>
+<li>%x：显示十六进制整数</li>
+<li>%f：显示浮点数</li>
+</ul>
+</li>
+<li><p>**String.valueOf()**：将其他类型数据转化为String</p>
+</li>
+<li><p>**Boolean.parseBoolean()**：将字符串转为布尔值，转为其他类型类似</p>
+</li>
+<li><p>**toCharArray()**：将字符串转换为char[]</p>
+</li>
+</ol>
+<ul>
+<li>String 和char在内存中总是以Unicode编码</li>
+<li>将byte[]转换为String已知编码可以直接转换，转换为byte[]时优先考虑UTF-8编码</li>
+</ul>
+<h1 id="StringBuilder"><a href="#StringBuilder" class="headerlink" title="StringBuilder"></a>StringBuilder</h1><p>​    高效拼接字符，StringBuilder是一个可变对象，可以预分配缓冲区，增加字符时不会创建新的临时对象。线程不安全</p>
+<h1 id="StringBuffer"><a href="#StringBuffer" class="headerlink" title="StringBuffer"></a>StringBuffer</h1><p>​    可变长字符串，运行效率慢，线程安全</p>
+<h1 id="StringJoiner"><a href="#StringJoiner" class="headerlink" title="StringJoiner"></a>StringJoiner</h1><p>​    方便拼接字符，可以指定拼接的模式，开头以及结尾</p>
+<h1 id="包装类"><a href="#包装类" class="headerlink" title="包装类"></a>包装类</h1><p>​    对于八大基本类型定义的包装类：Boolean,Byte,Short,Integer,Long,Float,Double,Character。</p>
+<h2 id="包装类的创建"><a href="#包装类的创建" class="headerlink" title="包装类的创建"></a>包装类的创建</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//new,不推荐</span></span><br><span class="line">Integer i = <span class="keyword">new</span> Integer(<span class="number">10</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//静态方法valueOf(int)创建</span></span><br><span class="line">Integer i = Integer.valueOf(<span class="number">10</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//静态方法valueOf(String)创建</span></span><br><span class="line">Integer i = Integer.valueOf(<span class="string">&quot;10&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="自动装箱，拆箱"><a href="#自动装箱，拆箱" class="headerlink" title="自动装箱，拆箱"></a>自动装箱，拆箱</h2><p>​    java编译器会自动在int和integer之间转换</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Integer n = <span class="number">100</span>; <span class="comment">// 编译器自动使用Integer.valueOf(int)</span></span><br><span class="line"><span class="keyword">int</span> x = n; <span class="comment">// 编译器自动使用Integer.intValue()</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>装箱和拆箱发生在编译阶段，会影响代码的执行效率</li>
+<li>拆箱可以通过Number类实现，装箱可以通过包装类的方法实现</li>
+<li>自动装箱调用valueOf()方法，自动拆箱调用intValue()方法</li>
+</ul>
+<h2 id="不变类"><a href="#不变类" class="headerlink" title="不变类"></a>不变类</h2><p>​    所有包装类型都是不变类，即不发生改变，比较包装类时要使用equals()</p>
+<h2 id="整数缓存区"><a href="#整数缓存区" class="headerlink" title="整数缓存区"></a>整数缓存区</h2><pre><code><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    Integer integer1 = <span class="keyword">new</span> Integer(<span class="number">100</span>);</span><br><span class="line">    Integer integer2 = <span class="keyword">new</span> Integer(<span class="number">100</span>);</span><br><span class="line">    System.out.println(integer1==integer2); <span class="comment">// false</span></span><br><span class="line"></span><br><span class="line">    Integer integer3 = <span class="number">100</span>;</span><br><span class="line">    Integer integer4 =<span class="number">100</span>;</span><br><span class="line">    System.out.println(integer3==integer4); <span class="comment">// true</span></span><br><span class="line"></span><br><span class="line">    Integer integer5 = <span class="number">200</span>;</span><br><span class="line">    Integer integer6 = <span class="number">200</span>;</span><br><span class="line">    System.out.println(integer5==integer6); <span class="comment">// false</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</code></pre>
+<ul>
+<li>直接使用new 会构造新的对象，不同对象的地址不同，因此第一个返回false</li>
+<li>自动装箱时调用Integer.valueOf()方法，java初始情况下会创建一个整数包装类的数组，储存了-128<del>127的整数包装类对象，如果在自动装箱的过程中数值在-128</del>127之间，会直接返回初始化的包装类对象。超过这个范围，会新创建对象，因此第二个返回true</li>
+<li>200不在范围内，因此返回false</li>
+</ul>
+<h1 id="枚举类"><a href="#枚举类" class="headerlink" title="枚举类"></a>枚举类</h1><p>​    编译器可以自动检测某个值在枚举的集合内，并且不同用途的枚举需要不同的类型来标记</p>
+<ul>
+<li><p>enum常量本身带有类型信息，编译器会自动检测类型错误</p>
+</li>
+<li><p>不可能引用非枚举的值，无法通过编译</p>
+</li>
+<li><p>enum类型的每个常量在JVM中只有唯一一个实例，可以直接用==进行比较，不必一定使用equals()</p>
+</li>
+<li><p>定义的enum类型无法被继承，无法使用new操作符创建enum，可以将enum用于switch语句</p>
+</li>
+<li><p>每一个枚举的值都是class的实例，且是唯一的实例，他们有一些方法：</p>
+<ol>
+<li><strong>name()</strong>:返回常量名，无法被覆写</li>
+<li><strong>ordinal()</strong>:返回定义的常量顺序</li>
+<li><strong>toString()</strong>:返回和name()一样的字符串，但可以被覆写</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//定义Color</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">enum</span> <span class="title">Color</span></span>&#123;</span><br><span class="line">    RED,BLUE,GREEN;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//编译后的结果</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Color</span> <span class="keyword">extends</span> <span class="title">Enum</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Color RED = <span class="keyword">new</span> Color();</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Color GREEN = <span class="keyword">new</span> Color();</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Color BLUE = <span class="keyword">new</span> Color();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//私有构造器</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Color</span><span class="params">()</span></span>&#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="记录类"><a href="#记录类" class="headerlink" title="记录类"></a>记录类</h1><ul>
+<li><strong>不变类</strong>具有一些特点：定义class时使用final，无法派生子类；每个字段使用final，保证创建实例后无法修改任何字段</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//定义一个不变类</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Point</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> x;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> y;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Point</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.x = x;</span><br><span class="line">        <span class="keyword">this</span>.y = y;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">x</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.x;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">y</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.y;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//除此之外还要正确覆写hashCode()和equals()方法</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>由于不变类的编写较为复杂，从java 14开始引入Record类，可以一行写出不变类。和enum类似，要通过record关键字由编译器实现继承</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> record <span class="title">Point</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span></span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//等价于以下代码</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Point</span> <span class="keyword">extends</span> <span class="title">Record</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> x;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> y;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Point</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.x = x;</span><br><span class="line">        <span class="keyword">this</span>.y = y;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">x</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.x;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">y</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.y;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> String.format(<span class="string">&quot;Point[x=%s, y=%s]&quot;</span>, x, y);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object o)</span> </span>&#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">hashCode</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//可以使用Compact Constructor对参数进行验证</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> record <span class="title">Point</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> Point &#123;</span><br><span class="line">        <span class="keyword">if</span> (x &lt; <span class="number">0</span> || y &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="BigInteger"><a href="#BigInteger" class="headerlink" title="BigInteger"></a>BigInteger</h1><p>​    java.math.BigInteger可以表示任意大小的整数，BigInteger内部使用int[]数组来模拟非常大的整数。</p>
+<p>​    BigInteger进行计算时必须使用实例方法，而且计算速度较慢。BigInteger可以转化为基本类型，如：byteValue(),longValue()等，超出范围会丢失高位信息。如果需要精确转换，需要使用byteValueExact()等方法。</p>
+<h1 id="BigDecimal"><a href="#BigDecimal" class="headerlink" title="BigDecimal"></a>BigDecimal</h1><p>​    BigDecimal可以表示一个任意大小且精度完全准确的浮点数，是通过一个BigInteger和scale来表示的。使用**scale()<strong>表示小数位数，使用</strong>stripTrailingZeros()**可以将BigDecimal格式化为一个相等的去掉末尾0的BigDecimal。</p>
+<ul>
+<li>如果scale()为负数，则表示BigDecimal为整数，末尾有0</li>
+<li>可以使用**setScale()**对BigDecimal设置精度，可以四舍五入也可以截断</li>
+<li>进行加减乘时精度不会丢失，但在进行除法时，会有无法除尽的情况，因此需要指定精度和如何截断</li>
+<li><strong>divideAndRemainder()</strong>:返回一个容量为2的数组，分别代表商和余数</li>
+<li>创建时尽量使用字符串创建，做运算时要使用特定的方法进行计算</li>
+</ul>
+<h2 id="比较BigDecimal"><a href="#比较BigDecimal" class="headerlink" title="比较BigDecimal"></a>比较BigDecimal</h2><ul>
+<li>equals()：要求两个的scale()相等</li>
+<li>使用compareTo()：返回负数，正数和0，代表小于，大于和等于</li>
+</ul>
+<h1 id="Data"><a href="#Data" class="headerlink" title="Data"></a>Data</h1><p>​    大部分方法被Calendar类中的方法取代。表示特定的瞬间，精确到毫秒。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//创建Data对象</span></span><br><span class="line">    Date date1 = <span class="keyword">new</span> Date();</span><br><span class="line">    System.out.println(date1);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//昨天</span></span><br><span class="line">    Date data2 = <span class="keyword">new</span> Date(date1.getTime()-<span class="number">60</span>*<span class="number">60</span>*<span class="number">24</span>*<span class="number">1000</span>);</span><br><span class="line">    System.out.println(data2);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//after ，before  之前，之后</span></span><br><span class="line">    <span class="keyword">boolean</span> b1 = date1.after(data2);</span><br><span class="line">    System.out.println(b1);</span><br><span class="line">    b1 = date1.before(data2);</span><br><span class="line">    System.out.println(b1);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//compareTo()</span></span><br><span class="line">    <span class="keyword">int</span> d = data2.compareTo(date1);</span><br><span class="line">    System.out.println(d);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="Calendar"><a href="#Calendar" class="headerlink" title="Calendar"></a>Calendar</h1><p>​    提供获取和设置各种日历字段的方法。构造方法为protected，不能直接创建对象，需要使用方法创建对象。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//创建Calendar对象</span></span><br><span class="line">    Calendar calendar = Calendar.getInstance();</span><br><span class="line">    System.out.println(calendar.getTime());</span><br><span class="line">    System.out.println(calendar.getTimeInMillis());</span><br><span class="line"></span><br><span class="line">    <span class="comment">//获得时间信息</span></span><br><span class="line">    <span class="comment">//获取年</span></span><br><span class="line">    <span class="keyword">int</span> year = calendar.get(Calendar.YEAR);</span><br><span class="line">    <span class="keyword">int</span> month = calendar.get(Calendar.MONTH);</span><br><span class="line">    <span class="keyword">int</span> day = calendar.get(Calendar.DAY_OF_MONTH);</span><br><span class="line">    <span class="keyword">int</span> hour = calendar.get(Calendar.HOUR_OF_DAY);</span><br><span class="line">    <span class="keyword">int</span> minute = calendar.get(Calendar.MINUTE);</span><br><span class="line">    <span class="keyword">int</span> second = calendar.get(Calendar.SECOND);</span><br><span class="line"></span><br><span class="line">    System.out.println(year+<span class="string">&quot;年:&quot;</span>+(month+<span class="number">1</span>)+<span class="string">&quot;月&quot;</span>+day+<span class="string">&quot;日&quot;</span>+hour+<span class="string">&quot;:&quot;</span>+minute+<span class="string">&quot;:&quot;</span>+second);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//修改时间</span></span><br><span class="line">    calendar.set(Calendar.DAY_OF_MONTH,<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//添加时间</span></span><br><span class="line">    calendar.add(Calendar.HOUR_OF_DAY,<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">    calendar.getActualMaximum(Calendar.DAY_OF_MONTH); <span class="comment">// 获取当前字段的最大值，也就是本月的最后一天</span></span><br><span class="line">    calendar.getActualMinimum(Calendar.DAY_OF_MONTH);<span class="comment">//获取当前字段的最小值</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="Simple-DataFormat"><a href="#Simple-DataFormat" class="headerlink" title="Simple DataFormat"></a>Simple DataFormat</h1><p>​    可以将日期转换为文本，或者将文本转换为日期。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ParseException </span>&#123;</span><br><span class="line">    <span class="comment">//创建SimpleDataFormat对象</span></span><br><span class="line">    SimpleDateFormat sdf = <span class="keyword">new</span> SimpleDateFormat(<span class="string">&quot;yyyy年MM月dd日 HH:mm:ss&quot;</span>);</span><br><span class="line">    <span class="comment">//创建Date</span></span><br><span class="line">    Date date = <span class="keyword">new</span> Date();</span><br><span class="line">    <span class="comment">//格式化Date（日期转换为字符串）</span></span><br><span class="line">    String str = sdf.format(date);</span><br><span class="line">    System.out.println(str);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//解析（字符串转为日期）</span></span><br><span class="line">    Date date2 = sdf.parse(<span class="string">&quot;2021年6月2日 16:34:22&quot;</span>);</span><br><span class="line">    System.out.println(date2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="System"><a href="#System" class="headerlink" title="System"></a>System</h1><p>​    获取系统的属性数据和其他操作，构造方法私有。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ParseException </span>&#123;</span><br><span class="line">    <span class="comment">//复制数组</span></span><br><span class="line">    <span class="comment">//src – the source array.</span></span><br><span class="line">    <span class="comment">//srcPos – starting position in the source array.</span></span><br><span class="line">    <span class="comment">//dest – the destination array.</span></span><br><span class="line">    <span class="comment">//destPos – starting position in the destination data.</span></span><br><span class="line">    <span class="comment">//length – the number of array elements to be copied</span></span><br><span class="line">    <span class="keyword">int</span>[] arr = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>&#125;;</span><br><span class="line">    <span class="keyword">int</span>[] dest = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">6</span>];</span><br><span class="line">    System.arraycopy(arr,<span class="number">0</span>,dest,<span class="number">1</span>,arr.length);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; dest.length; i++) &#123;</span><br><span class="line">        System.out.println(dest[i]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//获得当前时间的毫秒数。从1970年1月1日开始计算</span></span><br><span class="line">    System.out.println(System.currentTimeMillis());</span><br><span class="line"></span><br><span class="line">    <span class="comment">//System.gc()  告诉垃圾回收器回收</span></span><br><span class="line">    System.gc();</span><br><span class="line"></span><br><span class="line">    <span class="comment">//退出JVM</span></span><br><span class="line">    System.exit(<span class="number">0</span>); <span class="comment">//0为正常退出，非0为异常退出</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/09/13/day9/" rel="prev" title="集合">
+      <i class="fa fa-chevron-left"></i> 集合
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/09/13/day11/" rel="next" title="IO">
+      IO <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#String"><span class="nav-number">1.</span> <span class="nav-text">String</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#String-%E6%96%B9%E6%B3%95"><span class="nav-number">1.1.</span> <span class="nav-text">String 方法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#StringBuilder"><span class="nav-number">2.</span> <span class="nav-text">StringBuilder</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#StringBuffer"><span class="nav-number">3.</span> <span class="nav-text">StringBuffer</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#StringJoiner"><span class="nav-number">4.</span> <span class="nav-text">StringJoiner</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8C%85%E8%A3%85%E7%B1%BB"><span class="nav-number">5.</span> <span class="nav-text">包装类</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8C%85%E8%A3%85%E7%B1%BB%E7%9A%84%E5%88%9B%E5%BB%BA"><span class="nav-number">5.1.</span> <span class="nav-text">包装类的创建</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%87%AA%E5%8A%A8%E8%A3%85%E7%AE%B1%EF%BC%8C%E6%8B%86%E7%AE%B1"><span class="nav-number">5.2.</span> <span class="nav-text">自动装箱，拆箱</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8D%E5%8F%98%E7%B1%BB"><span class="nav-number">5.3.</span> <span class="nav-text">不变类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B4%E6%95%B0%E7%BC%93%E5%AD%98%E5%8C%BA"><span class="nav-number">5.4.</span> <span class="nav-text">整数缓存区</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9E%9A%E4%B8%BE%E7%B1%BB"><span class="nav-number">6.</span> <span class="nav-text">枚举类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%B0%E5%BD%95%E7%B1%BB"><span class="nav-number">7.</span> <span class="nav-text">记录类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#BigInteger"><span class="nav-number">8.</span> <span class="nav-text">BigInteger</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#BigDecimal"><span class="nav-number">9.</span> <span class="nav-text">BigDecimal</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AF%94%E8%BE%83BigDecimal"><span class="nav-number">9.1.</span> <span class="nav-text">比较BigDecimal</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Data"><span class="nav-number">10.</span> <span class="nav-text">Data</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Calendar"><span class="nav-number">11.</span> <span class="nav-text">Calendar</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Simple-DataFormat"><span class="nav-number">12.</span> <span class="nav-text">Simple DataFormat</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#System"><span class="nav-number">13.</span> <span class="nav-text">System</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Kaixuan Wang"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Kaixuan Wang</p>
+  <div class="site-description" itemprop="description">只争朝夕</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kaixuan Wang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
