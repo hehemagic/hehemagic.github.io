@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/study-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/study-16x16.png">
+  <link rel="mask-icon" href="/images/study.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="消息队列概述 消息队列：不同进程之间通信或者统一进程下的不同线程通信。主要解决**应用耦合、异步消息、流量削峰**问题  发送者只管发送消息，接受者只管接收消息，发送者和接受者之间可以不存在任何联系异步处理   将原本串行执行的业务，通过消息队列的形式进行分块异步执行，处理速度更快    应用解耦 A系统进行订单创建，需要通知B、C系统作相应操作。A系统是强依赖BC系统的，如果此时BC系统出现了问">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Magic">
+<meta property="og:url" content="http://example.com/2023/03/22/kafka/index.html">
+<meta property="og:site_name" content="Magic">
+<meta property="og:description" content="消息队列概述 消息队列：不同进程之间通信或者统一进程下的不同线程通信。主要解决**应用耦合、异步消息、流量削峰**问题  发送者只管发送消息，接受者只管接收消息，发送者和接受者之间可以不存在任何联系异步处理   将原本串行执行的业务，通过消息队列的形式进行分块异步执行，处理速度更快    应用解耦 A系统进行订单创建，需要通知B、C系统作相应操作。A系统是强依赖BC系统的，如果此时BC系统出现了问">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2023/03/22/kafka/1.png">
+<meta property="og:image" content="http://example.com/2023/03/22/kafka/2.png">
+<meta property="og:image" content="http://example.com/2023/03/22/kafka/3.png">
+<meta property="og:image" content="http://example.com/2023/03/22/kafka/4.png">
+<meta property="og:image" content="http://example.com/2023/03/22/kafka/5.png">
+<meta property="og:image" content="http://example.com/2023/03/22/kafka/6.png">
+<meta property="og:image" content="http://example.com/2023/03/22/kafka/7.png">
+<meta property="og:image" content="http://example.com/2023/03/22/kafka/8.png">
+<meta property="og:image" content="http://example.com/2023/03/22/kafka/9.png">
+<meta property="og:image" content="http://example.com/2023/03/22/kafka/10.png">
+<meta property="og:image" content="http://example.com/2023/03/22/kafka/11.png">
+<meta property="og:image" content="http://example.com/2023/03/22/kafka/12.png">
+<meta property="og:image" content="http://example.com/2023/03/22/kafka/13.png">
+<meta property="og:image" content="http://example.com/2023/03/22/kafka/14.png">
+<meta property="og:image" content="http://example.com/2023/03/22/kafka/15.png">
+<meta property="og:image" content="http://example.com/2023/03/22/kafka/16.png">
+<meta property="og:image" content="http://example.com/2023/03/22/kafka/17.png">
+<meta property="og:image" content="http://example.com/2023/03/22/kafka/18.png">
+<meta property="og:image" content="http://example.com/2023/03/22/kafka/19.png">
+<meta property="og:image" content="http://example.com/2023/03/22/kafka/20.png">
+<meta property="og:image" content="http://example.com/2023/03/22/kafka/21.png">
+<meta property="og:image" content="http://example.com/2023/03/22/kafka/22.png">
+<meta property="og:image" content="http://example.com/2023/03/22/kafka/23.png">
+<meta property="og:image" content="http://example.com/2023/03/22/kafka/24.png">
+<meta property="og:image" content="http://example.com/2023/03/22/kafka/25.png">
+<meta property="og:image" content="http://example.com/2023/03/22/kafka/26.png">
+<meta property="og:image" content="http://example.com/2023/03/22/kafka/27.png">
+<meta property="og:image" content="http://example.com/2023/03/22/kafka/28.png">
+<meta property="article:published_time" content="2023-03-22T05:07:16.031Z">
+<meta property="article:modified_time" content="2023-03-22T05:16:53.007Z">
+<meta property="article:author" content="Kaixuan Wang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2023/03/22/kafka/1.png">
+
+<link rel="canonical" href="http://example.com/2023/03/22/kafka/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title> | Magic</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Magic</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/03/22/kafka/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Kaixuan Wang">
+      <meta itemprop="description" content="只争朝夕">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Magic">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-03-22 13:07:16 / 修改时间：13:16:53" itemprop="dateCreated datePublished" datetime="2023-03-22T13:07:16+08:00">2023-03-22</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="消息队列概述"><a href="#消息队列概述" class="headerlink" title="消息队列概述"></a>消息队列概述</h1><ul>
+<li><p><strong>消息队列：</strong>不同进程之间通信或者统一进程下的不同线程通信。主要解决**<em>应用耦合、异步消息、流量削峰</em>**问题</p>
+<ul>
+<li>发送者只管发送消息，接受者只管接收消息，发送者和接受者之间可以不存在任何联系<h2 id="异步处理"><a href="#异步处理" class="headerlink" title="异步处理"></a>异步处理</h2></li>
+</ul>
+</li>
+<li><p>将原本串行执行的业务，通过消息队列的形式进行分块异步执行，处理速度更快</p>
+</li>
+</ul>
+<p><img src="/2023/03/22/kafka/1.png"><br><img src="/2023/03/22/kafka/2.png"></p>
+<h2 id="应用解耦"><a href="#应用解耦" class="headerlink" title="应用解耦"></a>应用解耦</h2><ul>
+<li>A系统进行订单创建，需要通知B、C系统作相应操作。A系统是强依赖BC系统的，如果此时BC系统出现了问题，换成了另一个D系统，则代码就需要进行修改</li>
+<li>使用消息队列的方式，A系统只用发送消息即可，不用再关心BC系统的状态，进行了解耦</li>
+</ul>
+<p><img src="/2023/03/22/kafka/3.png"></p>
+<h2 id="流量削峰"><a href="#流量削峰" class="headerlink" title="流量削峰"></a>流量削峰</h2><ul>
+<li>某个系统平时qps比较低，做活动时qps激增，但系统的处理能力达不到，可以使用消息队列的形式，一方面可以缓解qps压力，另一方面也可以控制参加活动人数，超过限制就丢弃</li>
+</ul>
+<p><img src="/2023/03/22/kafka/4.png"></p>
+<h1 id="Kafka介绍"><a href="#Kafka介绍" class="headerlink" title="Kafka介绍"></a>Kafka介绍</h1><ul>
+<li>Kafka是一种高吞吐量的分布式发布订阅消息系统，它可以处理消费者规模的网站中的所有动作流数据</li>
+</ul>
+<p><img src="/2023/03/22/kafka/5.png"></p>
+<ul>
+<li>基本组件：<ul>
+<li><strong>Broker：</strong>消息中间件处理节点，一个Kafka节点就是一个Broker，一个或者多个Broker可以组成一个Kafka集群</li>
+<li><strong>Topic：</strong>每条发布到Kafka集群的消息都有一个类别，这个类别被称为Topic。（物理上不同Topic的消息分开存储，逻辑上一个Topic的消息虽然保存于一个或多个broker上但用户只需指定消息的Topic即可生产或消费数据而不必关心数据存于何处）</li>
+<li><strong>Partition</strong>：用于存放消息的队列，存放的消息都是<strong>有序</strong>的。同一个topic可以分多个partition</li>
+<li><strong>Producer：</strong>消息生产者，向Broker发送消息的客户端</li>
+<li><strong>Consumer</strong>：消息消费者，从Broker读取消息的客户端，通过offset进行标识消息被消费的位置</li>
+<li><strong>Consumer Group：</strong>每个consumer都属于一个group，一条消息可以发送到多个不同的group，但是一个group内只有一个consumer能够消费该信息</li>
+</ul>
+</li>
+<li>主要特性：<ul>
+<li><strong>快速持久化</strong>：可以在 O(1) 的系统开销下进行消息持久化</li>
+<li><strong>高吞吐</strong>：在一台普通的服务器上既可以达到10W/s的吞吐速率</li>
+<li><strong>完全的分布式系统</strong>：Broker、Producer和Consumer都原生自动支持分布式，自动实现负载均衡</li>
+<li>**零拷贝技术(zero-copy)**：减少IO操作步骤，提高系统吞吐量</li>
+<li>支持同步和异步复制两种高可用机制</li>
+<li>丰富的消息拉取模型，支持数据批量发送和拉取</li>
+<li>数据迁移、扩容对用户透明</li>
+<li>无需停机即可扩展机器</li>
+<li>高效订阅者水平扩展、实时的消息订阅、亿级的消息堆积能力、定期删除机制<h2 id="消息队列对比"><a href="#消息队列对比" class="headerlink" title="消息队列对比"></a>消息队列对比</h2><table>
+<thead>
+<tr>
+<th><strong>特性</strong></th>
+<th><strong>RabbitMQ</strong></th>
+<th><strong>RocketMQ</strong></th>
+<th><strong>Kafka</strong></th>
+<th><strong>ActiveMQ</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>开发语言</strong></td>
+<td>Erlang</td>
+<td>Java</td>
+<td>Scala&amp;Java</td>
+<td>Java</td>
+</tr>
+<tr>
+<td><strong>客户端支持</strong></td>
+<td>官方支持Erlang、Java、Ruby等，社区产出多语言API，几乎支持所有常用语言</td>
+<td>Java、C++</td>
+<td>官方支持Java，社区有多语言版本，如PHP、Python、Go、C/C++、Ruby、NodeJs等</td>
+<td>Java、C/C++、Python、PHP、Perl、.net等</td>
+</tr>
+<tr>
+<td><strong>协议支持</strong></td>
+<td>AMQP、XMPP、SMTP、SMTOP</td>
+<td>自定义协议，社区提供JMS</td>
+<td>自定义协议，社区提供了HTTP协议支持</td>
+<td>OpenWire、SMTOP、REST、XMPP、AMQP</td>
+</tr>
+<tr>
+<td><strong>可用性</strong></td>
+<td>高，基于主从架构实现高可用</td>
+<td>很高，分布式架构</td>
+<td>很高，分布式，一个数据多个副本，少数机器宕机，不会丢失数据，不会导致不可用</td>
+<td>高，基于主从架构实现高可用</td>
+</tr>
+<tr>
+<td><strong>集群</strong></td>
+<td>支持</td>
+<td>支持</td>
+<td>支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td><strong>负载均衡</strong></td>
+<td>支持</td>
+<td>支持</td>
+<td>支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td><strong>单机吞吐量</strong></td>
+<td>万级</td>
+<td>十万级</td>
+<td>十万级</td>
+<td>万级</td>
+</tr>
+<tr>
+<td><strong>topic数量对吞吐量的影响</strong></td>
+<td>-</td>
+<td>topic达到几百/几千的级别后，吞吐量会有较小幅度的下降，在同等机器下，可以支撑大量的 topic</td>
+<td>topic从几十到几百个时候，吞吐量会大幅度下降，因为Kafka的每个Topic、每个分区都会对应一个物理文件，若需要支撑大规模的topic，则需要增加更多的机器资源</td>
+<td>-</td>
+</tr>
+<tr>
+<td><strong>消息批量操作</strong></td>
+<td>不支持</td>
+<td>支持</td>
+<td>支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td><strong>消息推拉模式</strong></td>
+<td>pull/push均支持</td>
+<td>pull/push均支持</td>
+<td>pull</td>
+<td>pull/push均支持</td>
+</tr>
+<tr>
+<td><strong>消息可靠性</strong></td>
+<td>可以做到不丢失</td>
+<td>可以做到不丢失</td>
+<td>可以做到不丢失</td>
+<td>有较低的概率丢失数据</td>
+</tr>
+<tr>
+<td><strong>消息延迟</strong></td>
+<td>微秒级 (最快)</td>
+<td>毫秒级</td>
+<td>毫秒级</td>
+<td>毫秒级</td>
+</tr>
+<tr>
+<td><strong>持久化能力</strong></td>
+<td>内存、文件，支持数据堆积，但影响生产速率</td>
+<td>磁盘文件</td>
+<td>磁盘文件，只要容量够，可以做到无限堆积</td>
+<td>内存、文件、数据库</td>
+</tr>
+<tr>
+<td><strong>事务消息</strong></td>
+<td>不支持</td>
+<td>支持</td>
+<td>不支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td><strong>管理界面</strong></td>
+<td>web管理界面</td>
+<td>web管理界面</td>
+<td>web管理界面</td>
+<td>web管理界面</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="Kafka架构设计"><a href="#Kafka架构设计" class="headerlink" title="Kafka架构设计"></a>Kafka架构设计</h1><p><strong>2.1、设计思想</strong></p>
+<ul>
+<li>最基本的架构：producer发布一个消息到topic，topic的消息存于broker，consumer订阅这个topic，从broker中消费消息</li>
+</ul>
+<p><img src="/2023/03/22/kafka/6.png"></p>
+<ul>
+<li><p><strong>消息状态：</strong>消息是否被消费的状态保存在consumer中，broker不会在意消息被消费。consumer中会记录一个offset值，指向partition中下一条将要被消费的消息位置。offeset值设置错误可能会导致消息丢失或被消费多次</p>
+</li>
+<li><p><strong>消息持久化</strong>：kafka会把消息持久化在本地的文件系统中</p>
+</li>
+<li><p><strong>批量发送</strong>：以消息集合为单位批量发送，提高效率</p>
+</li>
+<li><p><strong>Push-and-Pull</strong>：producer向broker中Push消息，consumer从broker中pull消息</p>
+</li>
+<li><p>**分区机制(partition)**：producer可以决定将消息发送到topic的哪个分区，一个partition中的消息顺序就是producer发送的消息顺序，一个topic的partition数是可以指定的</p>
+<h2 id="kafka系统架构"><a href="#kafka系统架构" class="headerlink" title="kafka系统架构"></a>kafka系统架构</h2><p><img src="/2023/03/22/kafka/7.png"></p>
+</li>
+<li><p>一个典型的Kafka集群中包含若干Producer、Broker、Consumer Group以及一个Zookeeper集群。Kafka通过Zookeeper管理Broker集群，Producer使用Push模式将消息发送到Broker，Consumer Group使用Pull模式从Broker订阅并消费消息</p>
+</li>
+<li><p>一个kafka集群中，一个服务器就是一个broker，broker可以水平无限扩展，同一个topic的消息可以分布在多个broker中</p>
+</li>
+<li><p>producer将消息发送到broker的partition leader节点，producer可以通过配置保证写入的消息不丢失，支持消息异步发送、批量发送</p>
+</li>
+<li><p>push模式的目标是尽可能以最快速度传递消息，pull模式可以根据consumer消费能力适当调整速率消费消息</p>
+</li>
+<li><p>为了提升整个集群的吞吐量，物理上一个Topic可以分成多个Partition，每个<strong>Partition在磁盘上对应一个文件夹</strong>，该文件夹下存放了这个Partition的所有消息文件和索引文件。假设有topic1和topic2两个Topic，且分别有13个和19个分区，则整个集群会生成32个文件夹</p>
+</li>
+<li><p>每个消息文件都是一个log entry序列，结构如下：</p>
+<ul>
+<li>一条完整的消息包含RECORD、offset以及message size。record为消息格式，offset标识消息在partition中的偏移量（逻辑值），message size表示消息的大小。message set包含一条或多条信息</li>
+<li>record格式：<ul>
+<li>crc32：crc32校验值，校验范围magic-value</li>
+<li>magic：消息格式版本号</li>
+<li>attributes：消息的属性，总共占1个字节，低3位表示压缩类型：0表示NONE、1表示GZIP、2表示SNAPPY、3表示LZ4，其余位保留</li>
+<li>key length：消息的key长度，-1表示没有key</li>
+<li>key：可选</li>
+<li>value length：消息体长度，-1表示消息为空</li>
+<li>value：消息体</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="/2023/03/22/kafka/8.png"></p>
+<h2 id="消息发送"><a href="#消息发送" class="headerlink" title="消息发送"></a>消息发送</h2><ul>
+<li>Producer发送消息到Broker时，会根据Paritition机制选择将消息存储到哪一个Partition。如果Partition机制设置合理，所有消息可以均匀分布到不同的Partition里，这样就实现了<strong>负载均衡</strong>。如果一个Topic对应一个文件，那这个文件所在的机器I/O将会成为这个Topic的性能瓶颈，而有了Partition后，不同的消息可以并行写入不同的Partition中，极大的提高了吞吐率。具体有以下几种策略：<ul>
+<li>轮询策略：<ul>
+<li>java客户端默认策略</li>
+<li>保证消息最大限度平均分配到所有分区，默认情况下是最合理的分配方案</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="/2023/03/22/kafka/9.png"></p>
+<ul>
+<li>随机策略：从partition列表中随机选择一个</li>
+<li>按消息键保存策略：<ul>
+<li>kafka允许为每条消息定义消息键，key</li>
+<li>一旦消息被定义了key，可以保证同一个key消息放在相同的分区</li>
+</ul>
+</li>
+</ul>
+<p><img src="/2023/03/22/kafka/10.png"></p>
+<ul>
+<li><p>自定义策略</p>
+<h2 id="消息消费"><a href="#消息消费" class="headerlink" title="消息消费"></a>消息消费</h2></li>
+<li><p>将offset信息写入到__consumer_offsets的topic</p>
+</li>
+<li><p>consumer group 采用pull方式消费消息，每个consumer消费哪个partition的消息需要一套机制。并且partition是可以水平扩展的，随着partition的扩展，consumer消费的partition也会改变</p>
+</li>
+<li><p>当以下事件发生时，kafka会进行分区分配：</p>
+<ul>
+<li>同一个consumer group中新增consumer</li>
+<li>consumer离开当前的group</li>
+<li>订阅的主题新增partition</li>
+</ul>
+</li>
+<li><p>分区分配策略：</p>
+<ul>
+<li>Range策略：按照消费者的线程总数均分<ul>
+<li>假设我们有个名为 T1 的主题，其包含了5个分区，然后我们有两个消费者（C1，C2）来消费这5个分区里面的数据，而且C1的 num.streams = 2，C2 的 num.streams = 1（这里num.streams指的是消费者的消费线程个数）。Range策略是对每个主题而言的，首先对同一个主题里面的分区按照序号进行排序，并对消费者按照顺序进行排序。在我们的例子里面，排完序的分区将会是0, 1, 2, 3, 4,；消费者线程排完序将会是C1-0, C1-1, C2-0。然后将partitions的个数除以消费者线程的总数来决定每个消费者线程消费几个分区。如果除不尽，那么前面几个消费者线程将会多消费一个分区。在我们的例子里面，我们有5个分区，3个消费者线程， 5 / 3 = 1，而且除不尽，那么消费者线程 C1-0 、C1-1将会多消费一个分区，所以最后分区分配的结果看起来是这样的：C1-0 将消费 0, 1分区，C1-1 将消费 2, 3 分区，C2-0 将消费4分区。具体消费示意图如下所示：</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="/2023/03/22/kafka/11.png"></p>
+<ul>
+<li>RoundRobin策略<ul>
+<li>前提：同一个consumer group中的所有消费者线程数相同；每个consumer订阅的主题相同</li>
+<li>将所订阅的主题的分区组成 TopicAndPartition 列表，然后对 TopicAndPartition 列表按照 hashCode 进行排序。分配时轮换分配</li>
+</ul>
+</li>
+</ul>
+<p><img src="/2023/03/22/kafka/12.png"></p>
+<h2 id="消息可靠性"><a href="#消息可靠性" class="headerlink" title="消息可靠性"></a>消息可靠性</h2><ul>
+<li>Kafka的高可靠性的保障来源于其健壮的副本（replication）策略。Kafka将为每个partition提供多个replication，同时将replication分布到整个集群的其它Broker中，数量可以通过参数设置。replication会选举一个Leader节点，其它节点为Follower节点，消息发送全部发送到Leader然后再通过同步算法同步到Follower节点中，当其中有replication不能工作会重新进行选举，即使部分Broker宕机仍然能保证整个集群高可用，消息不丢失</li>
+</ul>
+<p><img src="/2023/03/22/kafka/13.png"></p>
+<h1 id="kafka高可用"><a href="#kafka高可用" class="headerlink" title="kafka高可用"></a>kafka高可用</h1><ul>
+<li><p>保障一个或多个broke宕机后，剩下的broker及所有的partition都可以继续服务</p>
+</li>
+<li><p>kafka采用多机备份和消息应答的方式解决了数据丢失问题，通过一套失败恢复机制解决服务不可用问题</p>
+<h2 id="消息备份"><a href="#消息备份" class="headerlink" title="消息备份"></a>消息备份</h2></li>
+<li><p>ISR(In-Sync Replicas)：一个partition中与Leader保持同步的Replica列表，在replica.lag.time.max.ms时间内与Leader保持同步。Follower周期性地向Leader发送FetchRequest请求，请求数据同步</p>
+</li>
+<li><p>Acks：生产者发送消息中包含acks字段，代表Leader应答生产者前Leader收到的应答数</p>
+<ul>
+<li>acks=0：生产者无需服务端的任何确认，无法保证服务端接收到消息</li>
+<li>acks=1：Leader在接收到消息之后立刻应答，无需等待所有Follower同步消息，如果Leader宕机，会产生数据丢失</li>
+<li>acks=all：Leader需要等待ISR中所有副本都同步完毕再进行应答，响应时间为ISR中最慢的机器</li>
+</ul>
+</li>
+<li><p>kafka副本对象的重要属性：</p>
+<ul>
+<li>LEO(log end offset)：日志末端偏移，指向副本日志中下一条消息的位移值（下一条消息的写入位置）</li>
+<li>HW(high watermark)：已同步消息标识，因其类似于木桶效应中短板决定水位高度，故取名高水位线<ul>
+<li>所有HW以下的数据都是备份过的，对于任何一个对象而言，HW不会大于LEO</li>
+<li>Leader的HW值由ISR中所有备份的LE最小值决定（最慢的机器）</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="/2023/03/22/kafka/14.png"></p>
+<h2 id="故障恢复"><a href="#故障恢复" class="headerlink" title="故障恢复"></a>故障恢复</h2><ul>
+<li><p>kafka在集群所有Broker中选出一个Controller，负责各Partition的Leader选举以及Replica的重新分配。当出现Leader故障后，Controller会将Leader/Follower的变动通知到需为此作出响应的Broker</p>
+<h3 id="Broker故障恢复"><a href="#Broker故障恢复" class="headerlink" title="Broker故障恢复"></a>Broker故障恢复</h3></li>
+<li><p><strong>场景一：</strong>Broker和其他的Broker断开，ZooKeeper还和Broker0连接，认为它还存活</p>
+</li>
+</ul>
+<p><img src="/2023/03/22/kafka/15.png"></p>
+<ul>
+<li><strong>Partition0：</strong>Broker0中的副本为Partition0的Leader，当Broker0超过_replica.lag.time.max.ms_没接收到Broker1、Broker2的**<em>FetchRequest</em>**同步请求后，Broker0选择将Partition0的ISR收缩到仅剩Broker0本身，并将ISR的变更同步到ZooKeeper；Broker0需要根据_min.insync.replicas_的配置值决定是否继续接收profucer数据</li>
+<li><strong>Partition1：</strong>超过_replica.lag.time.max.ms_后，Broker1会将Broker0中的副本从Partition1的ISR中移除。若后续Broker0恢复连接并赶上了Broker1，则Broker1还会再将Broker0重新加入Partition1的ISR</li>
+<li><strong>场景二：</strong>Broker和ZooKeeper断开连接，ZooKeeper会认为Broker0宕机</li>
+</ul>
+<p><img src="/2023/03/22/kafka/16.png"></p>
+<ul>
+<li><strong>Partition0：</strong><ul>
+<li>ZooKeeper删除broker0后，该节点上注册的Watcher会通知Controller，Controller会发现Broker0为Partition0的Leader，于是从当前存活的ISR中选择了Broker2作为Partition0的新Leader。Controller通过<strong>LeaderAndIsrRequest</strong>将Leader变更通知到Broker1、Broker2，于是Broker1改向Broker2发送Partition0数据的FetchRequest请求</li>
+<li>生产者每隔60秒会从_bootstrap.servers_中的Broker获取最新的metadata，当发现Partition0的Leader发生变更后，会改向新Leader-Broker2发送Partition0数据。另一边，Broker0收不到ZooKeeper通知，依然认为自己是Partition0的Leader；由于Broker1、Broker2不再向Broker0发送FetchRequest请求，缺失了ISR应答的Broker0停止写入acks=all的消息，但可以继续写入acks=1的消息。_replica.lag.time.max.ms_时间后，Broker0尝试向ZooKeeper发送ISR变更请求但失败了，于是不再接收生产者的消息</li>
+<li>当Broker0与ZooKeeper恢复连接后，发现自己不再是Partition0的Leader，于是将本地日志截断(为了保证和Leader数据一致性)，并开始向Broker2发送FetchRequest请求。<strong>在Broker0与ZooKeeper失联期间写入Broker0的所有消息由于未在新Leader中备份，这些消息都丢失了</strong>。</li>
+</ul>
+</li>
+<li><strong>Partition1：</strong>Broker0中的副本只是作为Partition1的Follower节点，而Broker0与Broker1依然保持连接，因此Broker0依然会向Broker1发送FetchRequest。只要Broker0能继续保持同步，Broker1也不会向ZooKeeper变更ISR。</li>
+<li>Broker故障恢复过程：Controller负责选举受影响的Partition的新Leader，并通知相关Broker</li>
+</ul>
+<p><img src="/2023/03/22/kafka/17.png"></p>
+<ul>
+<li><p>受到影响的Broker会收到Controller发送的LeaderAndIsrRequest请求后，Broker通过ReplicaManager的becomeLeaderOrFollower方法响应LeaderAndIsrRequest：<strong>新Leader会将HW更新为它的LEO值，而Follower则通过一系列策略截断log以保证数据一致性</strong></p>
+<h3 id="Controller故障恢复"><a href="#Controller故障恢复" class="headerlink" title="Controller故障恢复"></a>Controller故障恢复</h3><p><img src="/2023/03/22/kafka/18.png"></p>
+</li>
+<li><p>场景1：controller与zookeeper断开连接。</p>
+<ul>
+<li>ZooKeeper会将Controller临时节点删除，并按照故障恢复过程重新竞选出新Controller。原本的Controller由于无法连上ZooKeeper，它什么也执行不了；当它与ZooKeeper恢复连接后发现自己不再是Controller，会在Kafka集群中充当一个普通的Broker</li>
+</ul>
+</li>
+<li><p>场景2：Controller与某个broker断开连接。</p>
+<ul>
+<li>因为Controller无法通知到Broker0，所以Broker0不知道Partition0的Leader已经更换，所以也会出现broker和zookeeper断开连接时，短暂服务不可用和可能发生数据丢失的情况<h3 id="Controller故障恢复过程"><a href="#Controller故障恢复过程" class="headerlink" title="Controller故障恢复过程"></a>Controller故障恢复过程</h3></li>
+</ul>
+</li>
+<li><p>kafka将所有的broker都在zookeeper的controller节点上注册一个watcher，controller发生故障时，注册在上面的watcher会触发，所有存活的broker竞争成为新的controller（一个）</p>
+</li>
+<li><p>新的controller会在以下节点上注册watcher，监控boker的运行，负责leader宕机恢复，对管理的脚本做出响应</p>
+<ul>
+<li>在/admin节点上注册Watcher，以应对管理员脚本对Topic及Partition的影响</li>
+<li>在/brokers/ids节点上注册Watcher，以获取各Brokers的状态变化</li>
+<li>在/brokers/topics节点上注册Watcher，以监控每个Partition的ISR副本状态<h1 id="kafka高性能架构设计"><a href="#kafka高性能架构设计" class="headerlink" title="kafka高性能架构设计"></a>kafka高性能架构设计</h1><h2 id="kafka系统架构-1"><a href="#kafka系统架构-1" class="headerlink" title="kafka系统架构"></a>kafka系统架构</h2><img src="/2023/03/22/kafka/19.png"></li>
+</ul>
+</li>
+<li><p>Producer生产消息会涉及大量的消息网络传输，如果Producer每生产一个消息就发送到Broker会造成大量的网络消耗，严重影响到Kafka的性能。为了解决这个问题，Kafka使用了<strong>批量发送</strong>的方式。 Broker在持久化消息、读取消息的时候，如果采用传统的IO读写方式，会严重影响Kafka的性能，为了解决这个问题，Kafka采用了<strong>顺序写+零拷贝</strong>的方式</p>
+<h2 id="批量发送"><a href="#批量发送" class="headerlink" title="批量发送"></a>批量发送</h2></li>
+<li><p>producer生成消息发送到broker的过程：</p>
+<ul>
+<li>Kafka通过将Topic划分成多个Partition，Producer将消息分发到多个本地Partition的消息队列中，每个Partition消息队列中的消息会写入到不同的Leader节点。如图所示，消息经过路由策略，被分发到不同的Partition对应的本地队列，然后再批量发送到Partition对应的Leader节点</li>
+</ul>
+</li>
+</ul>
+<p><img src="/2023/03/22/kafka/20.png"></p>
+<ul>
+<li>消息路由：相同topic的消息分为多个partition，消息分配到哪个partition的策略为路由策略<ul>
+<li>round robin：producer将消息均分到每个partition，最常见策略</li>
+<li>散列：kafka对消息的key进行散列，根据散列值将消息路由到特定的partition，相同的key会路由到相同的partition</li>
+<li>自定义策略</li>
+</ul>
+</li>
+<li>发送流程：producer生产消息，序列化压缩之后，追加到本地的记录收集器，sender不断轮询，满足一定条件才将收集器中的数据发送到broker中<ul>
+<li>消息大小达到阈值</li>
+<li>消息等待发送时间达到阈值</li>
+</ul>
+</li>
+</ul>
+<p><img src="/2023/03/22/kafka/21.png"></p>
+<blockquote>
+<p>Producer会为每个Partition都创建一个双端队列来缓存客户端消息，队列的每个元素是一个批记录(ProducerBatch)，批记录使用createdMs表示批记录的创建时间(批记录中第一条消息加入的时间)， topicPartion表示对应的Partition元数据。当Producer生产的消息经过序列化，会被先写入到recordsBuilder对象中。一旦队列中有批记录的大小达到阈值，就会被Sender发送到Partition对应的Leader节点；若批记录等待发送的时间达到阈值，消息也会被发送到Partition对应的Leader节点中。<br><img src="/2023/03/22/kafka/22.png"></p>
+</blockquote>
+<ul>
+<li><p>具体流程：</p>
+<ul>
+<li>消息被记录收集器收集，按照partition追加到队列尾部的批记录中</li>
+<li>sender通过ready()从收集器中找出准备好的服务端节点</li>
+<li>如果客户端还没有和服务端节点建立连接，通过connect()建立连接</li>
+<li>sender通过drain()从记录收集器获取按照节点整理好的每个批记录</li>
+<li>sender得到每个节点的批记录后，为每个节点创建客户端请求，并将消息发送到服务端<h2 id="消息持久化"><a href="#消息持久化" class="headerlink" title="消息持久化"></a>消息持久化</h2><h3 id="随机IO和顺序IO"><a href="#随机IO和顺序IO" class="headerlink" title="随机IO和顺序IO"></a>随机IO和顺序IO</h3><img src="/2023/03/22/kafka/23.png"></li>
+</ul>
+</li>
+<li><p>一次读数据请求分为三个动作：</p>
+<ul>
+<li>寻道：磁头移动到指定的磁道上，时间代价最高，最长需要0.1s左右</li>
+<li>旋转延迟：将对应扇区旋转到磁头下</li>
+<li>数据传输：数据通过系统总线从磁盘传输到内存</li>
+</ul>
+</li>
+<li><p>随机IO:数据分布在磁盘的不同盘片的不同扇区中，获取数据需要将磁臂旋转到指定盘片，再通过盘片寻找到指定扇区才能获得数据。由于需要多次切换，读取速度较慢</p>
+</li>
+<li><p>顺序IO：数据分布在一起，找到第一块数据后，其他需要的数据就在第一块数据的后面，不需要多次切换寻址，读取速度较快</p>
+<h3 id="broker写消息"><a href="#broker写消息" class="headerlink" title="broker写消息"></a>broker写消息</h3></li>
+<li><p>broker需要将大量的消息持久化，存在大量的查询场景。因此kafka采用顺序写的方式进行消息持久化</p>
+</li>
+<li><p>producer传递给broker的每条消息都有一个顺序值，代表producer生产消息的顺序。producer创建的消息集中，每条消息的顺序值只是相对于本批次的序号，服务端会将每条消息的顺序值转换为绝对偏移量。kafka通过nextOffset来记录存储在日志中最近一条消息的偏移量</p>
+</li>
+</ul>
+<p><img src="/2023/03/22/kafka/24.png"></p>
+<ul>
+<li>broker将每个partition的消息追加到日志中，以日志分段为单位（segment）。当segment的大小达到阈值，会创建新的segment保存消息，每个segment都有一个基准偏移量（baseoffset），通过这个baseoffset可以计算出每条消息在partition中的绝对偏移量。每个segment由数据文件和索引文件组成，数据文件为消息内容，索引文件为消息偏移量的物理地址的索引</li>
+</ul>
+<p><img src="/2023/03/22/kafka/25.png"></p>
+<h3 id="基于索引文件的查询"><a href="#基于索引文件的查询" class="headerlink" title="基于索引文件的查询"></a>基于索引文件的查询</h3><p><img src="/2023/03/22/kafka/26.png"></p>
+<ul>
+<li>索引查询流程：假设有1000条消息，每100条消息写满了一个日志分段，一共有10个日志分段。客户端要查询偏移量为938的消息内容，根据索引文件，我们可以在最后一个日志分段的索引文件中，首先使用绝对偏移量999减去基准偏移量900得到相对偏移量99，然后找到最接近相对偏移量99的索引数据90，相对偏移量90对应的物理地址是1365，然后再到数据文件中，从文件物理位置1365开始往后读消息，直到找到偏移量为999的消息</li>
+<li>索引文件的特性：<ul>
+<li>索引文件映射偏移量到文件的物理位置，它不会对每条消息都建立索引，所以是稀疏的</li>
+<li>索引条目的偏移量存储的是相对于“基准偏移量”的“相对偏移量” ，不是消息的“绝对偏移量”</li>
+<li>偏移量是有序的，查询指定的偏移量时，使用二分查找可以快速确定偏移量的位置</li>
+<li>指定偏移量如果在索引文件中不存在，可以找到小于等于指定偏移量的最大偏移量</li>
+<li>稀疏索引可以通过内存映射方式，将整个索引文件都放入内存，加快偏移量的查询</li>
+</ul>
+</li>
+</ul>
+<p><strong>4.4 零拷贝</strong></p>
+<ul>
+<li>零拷贝技术可以减少数据拷贝和共享总线操作的次数，消除传输数据在存储器之间不必要的中间拷贝次数，减少用户应用程序地址空间和操作系统内核地址空间之间因为上下文切换而带来的开销，从而有效地提高数据传输效率</li>
+<li>传统读取数据并发送数据的过程：<ul>
+<li>读操作，DMA进行数据拷贝，将数据从磁盘拷贝到内核空间</li>
+<li>cpu将数据从内核空间拷贝到用户空间</li>
+<li>调用send，cpu将数据从用户空间拷贝到内核空间的socket缓冲区</li>
+<li>send结束，DMA将数据从内核拷贝到协议引擎</li>
+</ul>
+</li>
+</ul>
+<p><img src="/2023/03/22/kafka/27.png"></p>
+<ul>
+<li>零拷贝过程：简化了从内核空间拷贝到用户空间的过程<ul>
+<li>sendfile通过DMA将文件内容拷贝到一个数据缓冲区，由内核将数据拷贝到与输出套接字相关联的内核缓冲区</li>
+</ul>
+</li>
+</ul>
+<p><img src="/2023/03/22/kafka/28.png"></p>
+<ul>
+<li>从具体实现来看，Kafka的数据传输通过TransportLayer来完成，其子类PlaintextTransportLayer通过Java NIO的FileChannel的transferTo()和transferFrom()方法实现零拷贝。transferTo()和transferFrom()并不保证一定能使用零拷贝，实际上是否能使用零拷贝与操作系统相关，如果操作系统提供sendfile这样的零拷贝系统调用，则这两个方法会通过这样的系统调用充分利用零拷贝的优势，否则并不能通过这两个方法本身实现零拷贝</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/01/09/30/" rel="prev" title="SpringBoot">
+      <i class="fa fa-chevron-left"></i> SpringBoot
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/03/22/thrift/" rel="next" title="">
+       <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">消息队列概述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%82%E6%AD%A5%E5%A4%84%E7%90%86"><span class="nav-number">1.1.</span> <span class="nav-text">异步处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E8%A7%A3%E8%80%A6"><span class="nav-number">1.2.</span> <span class="nav-text">应用解耦</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%81%E9%87%8F%E5%89%8A%E5%B3%B0"><span class="nav-number">1.3.</span> <span class="nav-text">流量削峰</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Kafka%E4%BB%8B%E7%BB%8D"><span class="nav-number">2.</span> <span class="nav-text">Kafka介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E5%AF%B9%E6%AF%94"><span class="nav-number">2.1.</span> <span class="nav-text">消息队列对比</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Kafka%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1"><span class="nav-number">3.</span> <span class="nav-text">Kafka架构设计</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#kafka%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84"><span class="nav-number">3.1.</span> <span class="nav-text">kafka系统架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B6%88%E6%81%AF%E5%8F%91%E9%80%81"><span class="nav-number">3.2.</span> <span class="nav-text">消息发送</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B6%88%E6%81%AF%E6%B6%88%E8%B4%B9"><span class="nav-number">3.3.</span> <span class="nav-text">消息消费</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B6%88%E6%81%AF%E5%8F%AF%E9%9D%A0%E6%80%A7"><span class="nav-number">3.4.</span> <span class="nav-text">消息可靠性</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#kafka%E9%AB%98%E5%8F%AF%E7%94%A8"><span class="nav-number">4.</span> <span class="nav-text">kafka高可用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B6%88%E6%81%AF%E5%A4%87%E4%BB%BD"><span class="nav-number">4.1.</span> <span class="nav-text">消息备份</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%85%E9%9A%9C%E6%81%A2%E5%A4%8D"><span class="nav-number">4.2.</span> <span class="nav-text">故障恢复</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Broker%E6%95%85%E9%9A%9C%E6%81%A2%E5%A4%8D"><span class="nav-number">4.2.1.</span> <span class="nav-text">Broker故障恢复</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Controller%E6%95%85%E9%9A%9C%E6%81%A2%E5%A4%8D"><span class="nav-number">4.2.2.</span> <span class="nav-text">Controller故障恢复</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Controller%E6%95%85%E9%9A%9C%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B"><span class="nav-number">4.2.3.</span> <span class="nav-text">Controller故障恢复过程</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#kafka%E9%AB%98%E6%80%A7%E8%83%BD%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1"><span class="nav-number">5.</span> <span class="nav-text">kafka高性能架构设计</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#kafka%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84-1"><span class="nav-number">5.1.</span> <span class="nav-text">kafka系统架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%B9%E9%87%8F%E5%8F%91%E9%80%81"><span class="nav-number">5.2.</span> <span class="nav-text">批量发送</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B6%88%E6%81%AF%E6%8C%81%E4%B9%85%E5%8C%96"><span class="nav-number">5.3.</span> <span class="nav-text">消息持久化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9A%8F%E6%9C%BAIO%E5%92%8C%E9%A1%BA%E5%BA%8FIO"><span class="nav-number">5.3.1.</span> <span class="nav-text">随机IO和顺序IO</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#broker%E5%86%99%E6%B6%88%E6%81%AF"><span class="nav-number">5.3.2.</span> <span class="nav-text">broker写消息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E7%B4%A2%E5%BC%95%E6%96%87%E4%BB%B6%E7%9A%84%E6%9F%A5%E8%AF%A2"><span class="nav-number">5.3.3.</span> <span class="nav-text">基于索引文件的查询</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Kaixuan Wang"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Kaixuan Wang</p>
+  <div class="site-description" itemprop="description">只争朝夕</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">33</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kaixuan Wang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
